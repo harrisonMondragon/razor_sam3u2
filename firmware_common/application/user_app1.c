@@ -45,7 +45,8 @@ All Global variable names shall start with "G_<type>UserApp1"
 ***********************************************************************************************************************/
 /* New variables */
 volatile u32 G_u32UserApp1Flags;                          /*!< @brief Global state flags */
-
+volatile u32 myCounter;
+volatile bool ledOn;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
@@ -92,6 +93,12 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  
+  HEARTBEAT_OFF();
+  
+  ledOn = FALSE;
+  myCounter= U16_COUNTER_PERIOD_MS;
+  
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -140,7 +147,23 @@ State Machine Function Definitions
 /* What does this state do? */
 static void UserApp1SM_Idle(void)
 {
+  
+  myCounter --;
+  
+  if (myCounter == 0){
+    myCounter = U16_COUNTER_PERIOD_MS;
     
+    if (ledOn == TRUE){
+      HEARTBEAT_OFF();
+      ledOn = FALSE;
+    }
+    
+    else{
+      HEARTBEAT_ON();
+      ledOn = TRUE;
+    }
+    
+  }
 } /* end UserApp1SM_Idle() */
      
 
