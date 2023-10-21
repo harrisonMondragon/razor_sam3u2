@@ -92,6 +92,18 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);  
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
+  
+  LedOff(LCD_RED);
+  LedOff(LCD_BLUE);
+  LedOff(LCD_GREEN);
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -140,6 +152,114 @@ State Machine Function Definitions
 /* What does this state do? */
 static void UserApp1SM_Idle(void)
 {
+  static u16 u16BlinkCount = 0;
+  static u8 u8Counter = 0;
+  static u8 u8ColorIndex = 0;
+  
+  u16BlinkCount++;
+  
+  // Change stuff every 1/4 second
+  if(u16BlinkCount == 250){
+    //Reset 1/4 second counter
+    u16BlinkCount = 0;
+    
+    //Reset cycle counter
+    u8Counter++;
+    if(u8Counter == 16){
+      u8Counter = 0;
+    }
+    
+    //LED stuff
+    /* Parse the current count to set the LEDs
+       This will display like bitwise counting up to 15
+       - RED is bit 0
+       - ORANGE is bit 1
+       - YELLOW is bit 2
+       - GREEEN is bit 3
+    */
+    if(u8Counter & 0x01){
+      LedOn(RED);
+    } else {
+      LedOff(RED);
+    }
+    
+    if(u8Counter & 0x02){
+      LedOn(ORANGE);
+    } else {
+      LedOff(ORANGE);
+    }
+    
+    if(u8Counter & 0x04){
+      LedOn(YELLOW);
+    } else {
+      LedOff(YELLOW);
+    }
+    
+    if(u8Counter & 0x08){
+      LedOn(GREEN);
+    } else {
+      LedOff(GREEN);
+    }
+    
+    //Manage the backlight color
+    u8ColorIndex++;
+    if(u8ColorIndex == 7){
+      u8ColorIndex = 0;
+    }
+    
+    switch(u8ColorIndex){
+      case 0:
+        //white
+        LedOn(LCD_RED);
+        LedOn(LCD_GREEN);
+        LedOn(LCD_BLUE);
+        break;
+      
+      case 1:
+        //purple
+        LedOn(LCD_RED);
+        LedOff(LCD_GREEN);
+        LedOn(LCD_BLUE);
+        break;
+        
+      case 2:
+        //blue
+        LedOff(LCD_RED);
+        LedOff(LCD_GREEN);
+        LedOn(LCD_BLUE);
+        break;
+    
+      case 3:
+        //cyan
+        LedOff(LCD_RED);
+        LedOn(LCD_GREEN);
+        LedOn(LCD_BLUE);
+        break;
+      
+      case 4:
+        //green
+        LedOff(LCD_RED);
+        LedOn(LCD_GREEN);
+        LedOff(LCD_BLUE);
+        break;
+      
+      case 5:
+        //yellow
+        LedOn(LCD_RED);
+        LedOn(LCD_GREEN);
+        LedOff(LCD_BLUE);
+        break;
+      
+      case 6:
+        //red
+        LedOn(LCD_RED);
+        LedOff(LCD_GREEN);
+        LedOff(LCD_BLUE);
+        break;
+        
+    } /* end switch(u8ColorIndex) */ 
+    
+  } /* end if(u16BlinkCount == 250) */
     
 } /* end UserApp1SM_Idle() */
      
